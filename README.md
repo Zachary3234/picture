@@ -13,7 +13,8 @@
 使用jsdelivr服务的CDN加速链接
 
 https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/image/[文件名]
-文件名：利用API遍历仓库获取
+
+文件名可利用API遍历仓库获取
 
 ##  遍历Github仓库资源
 
