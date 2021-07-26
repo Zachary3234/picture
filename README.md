@@ -26,7 +26,7 @@ https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/[文件名]
 
 https://api.github.com/repos/Zachary3234/picture/contents
 
-https://api.github.com/repos/Zachary3234/picture/contents/image
+https://api.github.com/repos/Zachary3234/picture/contents/images
 
 > [jsdelivr API](https://github.com/jsdelivr/data.jsdelivr.com)
 
