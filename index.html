@@ -7,9 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>图床</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/vue@3.1.5/dist/vue.global.js"></script>
     <style>
-        html,body {
+        html,
+        body {
             height: 100%;
             width: 100%;
             margin: 0;
@@ -19,48 +22,104 @@
             overflow-y: auto;
         }
 
-        .grid-item { width: 360px; }
-        .grid-item img { width: 360px; }
+        .waterfall {
+            margin: auto;
+        }
+        .pic-item {
+            width: 236px;
+            height: auto;
+            margin-bottom: 16px;
+            margin-left: 8px;
+            margin-right: 8px;
+            border-radius: 16px;
+            display: flex;
+            overflow: hidden;
+        }
+        .pic-item img {
+            width: 236px;
+            height: auto;
+        }
     </style>
 </head>
 
 <body>
-    <div id="picbed" class="grid">
-        <template>
-            <div class="grid-item">
-                <img src="https://picsum.photos/360/460?random=1">
+    <div id="app">
+        <!-- 瀑布流照片墙 -->
+        <div class="waterfall">
+            <div class="pic-item" v-for="(imgPath,key) in imgPaths">
+                <img class="lazyload" src="loading.png" :data-src="imgPath" />
             </div>
-        </template>
+        </div>
     </div>
 </body>
-<style>
 
-</style>
 <script>
-    (function loadPicbed() {
-        let dompre = "<div class='grid-item'><img src=";
-        let domafter = "></img></div>";
-        // let apisrc = "https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main";
-        let apisrc = "https://api.github.com/repos/Zachary3234/picture/contents/images";
-        $.getJSON(apisrc, function (images) {
-            // let images = picbed.files[0].files;
-            let path;
-            for (let i = 0; i < images.length; i++) {
-                // path = 'https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/' + images[i].name;
-                path = images[i].download_url;
-                $("#picbed").append(dompre + path + domafter);
-            }
+    //监听窗口尺寸变化，响应式布局
+    $(".waterfall").css("width",Math.floor($(window).width()/252)*252);
+    $(window).resize(function(){
+        $(".waterfall").css("width",Math.floor($(window).width()/252)*252);
+    });
 
-        }).done(function (res){
-            console.log(res)
-            $('.grid').masonry({
-                // options
-                itemSelector: '.grid-item',
-                columnWidth: 200
+    // 组件配置
+    const RootComponent = {
+        data() {
+            return {
+                source: "",
+                imgPaths: [],
+            }
+        },
+        mounted() {
+            // 获取图源
+            this.loadFromGithubAPI();
+        },
+        updated() {
+            // 元素绑定瀑布流布局
+            var $wf = $('.waterfall').masonry({
+                itemSelector: '.pic-item',
+                columnWidth: 252
             });
-        });
-    })()
-    
+            // 监听图片加载触发瀑布流布局
+            $(".lazyload").on('load',function(){
+                $wf.masonry();
+            });
+            // 初始化懒加载
+            lazyload();
+        },
+        methods: {
+            loadFromGithubAPI(usejsdelivr = false) {
+                this.source = "https://api.github.com/repos/Zachary3234/picture/contents/images";
+                let _this = this;
+                $.getJSON(this.source, function (images) {
+                    _this.imgPaths = [];
+                    for (let i = 0; i < images.length; i++) {
+                        if (usejsdelivr)
+                            _this.imgPaths.push('https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/' + images[i].name);
+                        else
+                            _this.imgPaths.push(images[i].download_url);
+                    }
+                })
+            },
+            loadFromJsdelivrAPI() {
+                // JsdelivrAPI 更新太慢
+                this.source = "https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main";
+                let _this = this;
+                $.getJSON(this.source, function (res) {
+                    let images = res.files[0].files;
+                    _this.imgPaths = [];
+                    for (let i = 0; i < images.length; i++) {
+                        _this.imgPaths.push('https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/' + images[i].name);
+                    }
+                })
+            }
+        }
+    };
+
+    // 注册组件
+    const app = Vue.createApp(RootComponent);
+
+    // 挂载组件
+    const vm = app.mount('#app');
+
 </script>
 
 </html>
