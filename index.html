@@ -1,12 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Picture</title>
+    <title>图床</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <style>
+        html,body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .grid-item { width: 360px; }
+        .grid-item img { width: 360px; }
+    </style>
 </head>
+
 <body>
-    
+    <div id="picbed" class="grid">
+        <template>
+            <div class="grid-item">
+                <img src="https://picsum.photos/360/460?random=1">
+            </div>
+        </template>
+    </div>
 </body>
+<style>
+
+</style>
+<script>
+    (function loadPicbed() {
+        let dompre = "<div class='grid-item'><img src=";
+        let domafter = "></img></div>";
+        // let apisrc = "https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main";
+        let apisrc = "https://api.github.com/repos/Zachary3234/picture/contents/images";
+        $.getJSON(apisrc, function (images) {
+            // let images = picbed.files[0].files;
+            let path;
+            for (let i = 0; i < images.length; i++) {
+                // path = 'https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/' + images[i].name;
+                path = images[i].download_url;
+                $("#picbed").append(dompre + path + domafter);
+            }
+
+        }).done(function (res){
+            console.log(res)
+            $('.grid').masonry({
+                // options
+                itemSelector: '.grid-item',
+                columnWidth: 200
+            });
+        });
+    })()
+    
+</script>
+
 </html>
