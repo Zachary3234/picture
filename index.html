@@ -86,7 +86,7 @@
             lazyload();
         },
         methods: {
-            loadFromGithubAPI(usejsdelivr = false) {
+            loadFromGithubAPI(usejsdelivr = true) {
                 this.source = "https://api.github.com/repos/Zachary3234/picture/contents/images";
                 let _this = this;
                 $.getJSON(this.source, function (images) {
