@@ -73,7 +73,7 @@ const picbed = (function () {
             $.ajax({
                 url: api,
                 headers: {
-                    "Authorization": "token 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",
+                    "Authorization": "token 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",
                     "If-None-Match": rootDir.etag // etag验证图床仓库数据变化
                 }
             })
@@ -116,7 +116,7 @@ const picbed = (function () {
             $.ajax({
                 url: api + pathArrToPath(pathFound),
                 headers: {
-                    "Authorization": "token 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",
+                    "Authorization": "token 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",
                 }
             })
                 .always(
