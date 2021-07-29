@@ -6,119 +6,144 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>图床</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-    <script src="https://unpkg.com/vue@3.1.5/dist/vue.global.js"></script>
-    <style>
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-        }
-        body {
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        .waterfall {
-            margin: auto;
-        }
-        .pic-item {
-            width: 236px;
-            height: auto;
-            margin-bottom: 16px;
-            margin-left: 8px;
-            margin-right: 8px;
-            border-radius: 16px;
-            display: flex;
-            overflow: hidden;
-        }
-        .pic-item img {
-            width: 236px;
-            height: auto;
-        }
-    </style>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/masonry.pkgd.min.js"></script>
 </head>
+<style>
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+    }
+
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    #waterfall {
+        margin: auto;
+    }
+
+    #foot {
+        width: 100%;
+        height: 1.5em;
+        text-align: center;
+        background-color: #eee;
+    }
+
+
+    .pic-item {
+        width: 236px;
+        height: auto;
+        margin-bottom: 16px;
+        margin-left: 8px;
+        margin-right: 8px;
+        border-radius: 16px;
+        display: flex;
+        overflow: hidden;
+        background-color: #eee;
+    }
+
+    .pic-item img {
+        width: 236px;
+        height: auto;
+        margin: auto;
+    }
+</style>
 
 <body>
-    <div id="app">
-        <!-- 瀑布流照片墙 -->
-        <div class="waterfall">
-            <div class="pic-item" v-for="(imgPath,key) in imgPaths">
-                <img class="lazyload" src="loading.png" :data-src="imgPath" />
+    <!-- <img src="" alt=""> -->
+    <div id="waterfall">
+        <template>
+            <div class="pic-item">
+                <img src="">
             </div>
-        </div>
+        </template>
     </div>
+    <div id="foot">再往下就没有啦</div>
 </body>
 
+<script src="js/picbed.js"></script>
+<script src="js/lazyload.js"></script>
 <script>
-    //监听窗口尺寸变化，响应式布局
-    $(".waterfall").css("width",Math.floor($(window).width()/252)*252);
-    $(window).resize(function(){
-        $(".waterfall").css("width",Math.floor($(window).width()/252)*252);
-    });
+    // 文档控制对象
+    const doc = (function () {
+        // 当前浏览路径
+        var currentDir = [];
+        // 子目录名数组
+        var subDirs = [];
+        // picitem节点DOM
+        var $picitem = $("<div class='pic-item'></div>")
+        var count = 0;
+        var picItemArr;
+        var $wf;
+        
+        // 读取目录
+        function loadDir(ind = -1) {
+            var toPath = subDirs[ind] ? currentDir.concat(subDirs[ind]) : currentDir;
+            picbed.getFiles(toPath).then((res) => {
+                currentDir = toPath;
+                subDirs = res[1];
+                count = 0;
+                res[0].forEach((imgPath) => {
+                    $("#waterfall").append($picitem.clone());
+                })
+                picItemArr = $('.pic-item').toArray();
+                $wf = $('#waterfall').masonry({
+                            itemSelector: '.pic-item',
+                            columnWidth: 252
+                        });
 
-    // 组件配置
-    const RootComponent = {
-        data() {
-            return {
-                source: "",
-                imgPaths: [],
-            }
-        },
-        mounted() {
-            // 获取图源
-            this.loadFromGithubAPI();
-        },
-        updated() {
-            // 元素绑定瀑布流布局
-            var $wf = $('.waterfall').masonry({
-                itemSelector: '.pic-item',
-                columnWidth: 252
-            });
-            // 监听图片加载触发瀑布流布局
-            $(".lazyload").on('load',function(){
-                $wf.masonry();
-            });
-            // 初始化懒加载
-            lazyload();
-        },
-        methods: {
-            loadFromGithubAPI(usejsdelivr = true) {
-                this.source = "https://api.github.com/repos/Zachary3234/picture/contents/images";
-                let _this = this;
-                $.getJSON(this.source, function (images) {
-                    _this.imgPaths = [];
-                    for (let i = 0; i < images.length; i++) {
-                        if (usejsdelivr)
-                            _this.imgPaths.push('https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/' + images[i].name);
-                        else
-                            _this.imgPaths.push(images[i].download_url);
+
+                lazyload.iniImgs(res[0],
+                    function (){
+                        // allready
+                        // console.log('allready',this);
+                        this.forEach(img => {
+                            picItemArr[count++].append(img);
+                        });
+                        $wf.masonry();
+                    },
+                    function (){
+                        // ready
+                        // console.log('ready',this);
+
+                    },
+                    function (){
+                        // load
+                        // console.log('load',this);
+
+                    },
+                    function (){
+                        // error
+                        // console.log('error',this);
+
                     }
-                })
-            },
-            loadFromJsdelivrAPI() {
-                // JsdelivrAPI 更新太慢
-                this.source = "https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main";
-                let _this = this;
-                $.getJSON(this.source, function (res) {
-                    let images = res.files[0].files;
-                    _this.imgPaths = [];
-                    for (let i = 0; i < images.length; i++) {
-                        _this.imgPaths.push('https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/' + images[i].name);
-                    }
-                })
-            }
+                );
+                // otherSetup();
+            })
         }
-    };
+        loadDir(); //立即读取根目录
 
-    // 注册组件
-    const app = Vue.createApp(RootComponent);
+        // 设置页面
+        function otherSetup() {
+            console.log('currentDir', currentDir);
+            console.log('subDirs', subDirs);
+        }
 
-    // 挂载组件
-    const vm = app.mount('#app');
+        return {
+            loadDir: loadDir
+        }
+    })();
+    
+    //监听窗口尺寸变化，响应式布局
+    var picWidth = 252;
+    $("#waterfall").css("width", Math.floor($(window).width() / picWidth) * picWidth);
+    $(window).resize(function () {
+        $("#waterfall").css("width", Math.floor($(window).width() / picWidth) * picWidth);
+    });
 
 </script>
 
