@@ -41,4 +41,4 @@ https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main
 3. 或是通过API遍历仓库中的图片资源
 
 在Markdown中引用图片效果如下：
-![样例图片](https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/image/1627287391691-90A9D7F26C420BF6BA5F85A8C99855CD.png)
+![样例图片](https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/image/1627287391690-QQ%E5%9B%BE%E7%89%8720210606005805.jpg)
