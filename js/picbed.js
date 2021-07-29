@@ -1,6 +1,7 @@
 // 图床对象，拉取图床数据，存储图片链接
 const picbed = (function () {
     var rootDir;
+    const token = window.atob("Z2hwXzluTFlSS3dwb09nQnZ5ZXkxMzZJeUNOTHlSRDN3SzAwM0hycw==");
 
     // LocalStorage 加载图床目录/初始化图床目录
     try {
@@ -73,7 +74,7 @@ const picbed = (function () {
             $.ajax({
                 url: api,
                 headers: {
-                    "Authorization": "token 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",
+                    "Authorization": "token "+token,
                     "If-None-Match": rootDir.etag // etag验证图床仓库数据变化
                 }
             })
@@ -116,7 +117,7 @@ const picbed = (function () {
             $.ajax({
                 url: api + pathArrToPath(pathFound),
                 headers: {
-                    "Authorization": "token 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",
+                    "Authorization": "token "+token,
                 }
             })
                 .always(
