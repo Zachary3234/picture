@@ -67,7 +67,7 @@ const picbed = (function () {
         return path;
     }
 
-    const api = "https://api.github.com/repos/Zachary3234/picture/contents/images/";
+    const api = "https://api.github.com/repos/Zachary3234/picture-bed/contents/images/";
     // Promise 检查图床是否更新（仅初始化时检查）
     var etagPromise = (function () {
         const promise = new Promise((resolve, reject) => {
@@ -139,7 +139,7 @@ const picbed = (function () {
         return promise;
     }
 
-    var urlpre = "https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/";
+    var urlpre = "https://cdn.jsdelivr.net/gh/Zachary3234/picture-bed@main/images/";
     return {
         getFiles: async function (pathArr = []) {
             await etagPromise;
