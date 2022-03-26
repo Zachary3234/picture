@@ -12,7 +12,7 @@
 
 使用jsdelivr服务的CDN加速链接
 
-https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/[文件名]
+https://cdn.jsdelivr.net/gh/Zachary3234/picture-bed@main/images/[文件名]
 
 文件名可利用API遍历仓库获取
 
@@ -24,15 +24,15 @@ https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/[文件名]
 
 我的Github图床仓库链接：
 
-https://api.github.com/repos/Zachary3234/picture/contents
+https://api.github.com/repos/Zachary3234/picture-bed/contents
 
-https://api.github.com/repos/Zachary3234/picture/contents/images
+https://api.github.com/repos/Zachary3234/picture-bed/contents/images
 
 > [jsdelivr API](https://github.com/jsdelivr/data.jsdelivr.com)
 
 我的Github图床仓库链接：
 
-https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main
+https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture-bed@main
 
 ## 上传图片资源
 
@@ -41,4 +41,4 @@ https://data.jsdelivr.com/v1/package/gh/Zachary3234/picture@main
 3. 或是通过API遍历仓库中的图片资源
 
 在Markdown中引用图片效果如下：
-![样例图片](https://cdn.jsdelivr.net/gh/Zachary3234/picture@main/images/1627287391690-QQ%E5%9B%BE%E7%89%8720210606005805.jpg)
+![样例图片](https://cdn.jsdelivr.net/gh/Zachary3234/picture-bed@main/images/1627287391690-QQ%E5%9B%BE%E7%89%8720210606005805.jpg)
